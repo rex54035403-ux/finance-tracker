@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // 2. 引入資料庫連線
-require_once 'db/connection.php';
+require_once('connection.php');
 
 // 3. 接收表單傳來的資料
 $user = $_POST['username'] ?? '';
