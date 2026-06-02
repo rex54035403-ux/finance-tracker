@@ -1,17 +1,24 @@
 <?php
-// 使用明確的變數名稱
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+// 這是 Railway 服務連接後會自動注入的標準名稱
 $host = getenv('MYSQLHOST');
 $user = getenv('MYSQLUSER');
 $pass = getenv('MYSQLPASSWORD');
 $db   = getenv('MYSQLDATABASE');
-$port = getenv('MYSQLPORT') ?: '3306'; // 如果沒抓到變數，強制使用 3306
+$port = getenv('MYSQLPORT') ?: '3306';
 
-// 進行連線，加入 port 參數
+// 檢查是否成功讀取到變數 (方便除錯)
+if (!$host || !$user || !$db) {
+    die("錯誤：無法讀取資料庫設定。請確認 Railway 服務連接已建立。");
+}
+
+// 建立連線
 $conn = new mysqli($host, $user, $pass, $db, $port);
 $conn->set_charset("utf8");
 
+// 檢查連線
 if ($conn->connect_error) {
-    // 輸出詳細錯誤，讓我們知道這一次失敗在哪
-    die("資料庫連線失敗 (Host: $host, Port: $port): " . $conn->connect_error);
+    die("連線失敗 (Host: $host): " . $conn->connect_error);
 }
 ?>
